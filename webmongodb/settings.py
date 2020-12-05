@@ -68,11 +68,8 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': 'web_mongodb',
         'CLIENT': {
-            'host': 'localhost',
-            'port': 27017,
             'username': 'root',
             'password': 'root',
-            # 'authSource': '<collection>'
         }
     }
 }
