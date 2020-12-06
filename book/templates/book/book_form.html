@@ -1,0 +1,37 @@
+<div class="modal fade" tabindex="-1" id="saveModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">{% if form.instance.pk %}Modificar Libro: {{ form.instance.name }}{% else %}Crear Libro{% endif %}</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% load widget_tweaks %}
+            <form id="saveForm"
+                  action="{% if form.instance.pk %}{% url 'book:update' form.instance.pk %}{% else %}{% url 'book:create' %}{% endif %}"
+                  create_action="{% url 'book:create' %}"
+                  update_action="{% url 'book:update' 0 %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body row">
+                    {% for field in form.visible_fields %}
+                        <div class="col-12 mb-2">
+                            <label for="id_name">{{ field.label_tag }}</label>
+                            {% if not field.errors %}
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                            {% else %}
+                                {% render_field field class+='is-invalid' %}
+                                <div class="invalid-feedback">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="-1">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

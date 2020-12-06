@@ -1,0 +1,21 @@
+<div class="modal fade" tabindex="-1" id="deleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Borrar Libro: <span></span></h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% load widget_tweaks %}
+            <form id="deleteForm" action="" delete_action="{% url 'book:delete' 0 %}"  method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p>¿Seguro que deseas borrar el libro seleccionado?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="-1">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

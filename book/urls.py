@@ -2,8 +2,13 @@ from django.urls import path
 
 from . import views
 
-app_name = 'book'
-urlpatterns = [
-    path('', views.index, name='index'),
-    path('add', views.add, name='add'),
-]
+book_patterns = (
+    [
+        path('', views.index, name='list'),
+        path('create', views.add, name='create'),
+        path('update/<str:pk>', views.update, name='update'),
+        path('delete/<str:pk>', views.delete, name='delete'),
+        path('update/j-get-book-by-id/<str:pk>', views.json_get_book_by_id, name='json'),
+    ],
+    'book'
+)

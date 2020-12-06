@@ -1,4 +1,6 @@
+from bson import ObjectId
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from .models import Book
@@ -6,7 +8,7 @@ from .forms import BookForm
 
 
 def index(request):
-    return _listBook(request, BookForm())
+    return list_book(request, BookForm())
 
 
 def add(request):
@@ -15,16 +17,50 @@ def add(request):
         if form.is_valid():
             form.save()
         else:
-            return _listBook(request, form)
+            return list_book(request, form)
 
-    redirect('book:index')
+    return redirect('book:list')
 
 
-def _listBook(request, form):
-    books = Book.objects.all()
-    paginator = Paginator(books, 2)
+def update(request, pk):
+    book = Book.objects.get(pk=ObjectId(pk))
 
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+        else:
+            return list_book(request, form)
+
+    return redirect('book:list')
+
+
+def list_book(request, form):
     page_number = request.GET.get('page')
-    books_page = paginator.get_page(page_number)
 
-    return render(request, 'book/index.html', {'books': books_page, 'form': form})
+    paginator = Paginator(Book.objects.all(), 4)
+    books = paginator.get_page(page_number)
+
+    return render(request, 'book/book_list.html', {'books': books, 'form': form})
+
+
+def json_get_book_by_id(request, pk):
+    try:
+        book = Book.objects.get(pk=ObjectId(pk))
+    except Book.DoesNotExist:
+        return JsonResponse('')
+
+    return JsonResponse({
+        'name': book.name,
+        'content': book.content
+    })
+
+
+def delete(request, pk):
+    try:
+        book = Book.objects.get(pk=ObjectId(pk))
+        book.delete()
+    except Book.DoesNotExist:
+        pass
+
+    return redirect('book:list')

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <button onclick="cleanForm()" class="btn btn-success my-2" data-toggle="modal" data-target="#saveModal">
+        <i class="fa fa-plus"></i> Crear
+    </button>
+
+    <div class="row">
+        {% for book in books %}
+            <div class="col-md-6 col-12 mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>
+                            {{ book.name }}
+                            <button class="btn btn-outline-danger float-right" data-id="{{ book.pk }}"
+                                    data-toggle="modal" data-target="#deleteModal" data-name="{{ book.name }}">
+                                <i class="fa fa-trash-alt"></i>
+                            </button>
+                            <button class="btn btn-outline-primary float-right mr-2" data-id="{{ book.pk }}"
+                                    data-toggle="modal" data-target="#saveModal" data-name="{{ book.name }}">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ book.content }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% include 'partials/pagination.html' with page_obj=books %}
+
+    {% include 'book/book_form.html' with form=form %}
+
+    {% include 'book/book_confirm_delete.html' with form=form %}
+
+    <script>
+
+        window.onload = () => {
+            saveBook()
+            deleteBook()
+        }
+
+        function deleteBook() {
+            let deleteModal = document.getElementById('deleteModal')
+            let deleteForm = document.getElementById('deleteForm')
+
+            deleteModal.addEventListener('show.bs.modal', function (event) {
+                let button = event.relatedTarget
+                let id = button.getAttribute('data-id')
+                document.querySelector('#deleteModal .modal-title span').textContent = button.getAttribute('data-name')
+
+                deleteForm.setAttribute('action', deleteForm.getAttribute('delete_action').slice(0, -1) + id)
+            })
+        }
+
+        function saveBook() {
+            let saveModal = document.getElementById('saveModal')
+            let saveForm = document.getElementById('saveForm')
+            let modalTitle = document.getElementById('modal-title')
+
+            if (document.querySelectorAll("#saveModal .is-invalid").length > 0) {
+                let modal = new bootstrap.Modal(saveModal)
+                modal.show()
+            }
+
+
+            saveModal.addEventListener('show.bs.modal', function (event) {
+                let button = event.relatedTarget
+                let id = button.getAttribute('data-id')
+
+                if (id === null) {
+                    modalTitle.innerHTML = 'Crear Libro'
+                    saveForm.setAttribute('action', saveForm.getAttribute('create_action'))
+                } else {
+                    modalTitle.innerHTML = 'Modificar Libro: ' + button.getAttribute('data-name')
+                    saveForm.setAttribute('action', saveForm.getAttribute('update_action').slice(0, -1) + id)
+                    getInfoBook(id)
+                }
+            })
+        }
+
+        function getInfoBook(id) {
+            fetch('{% url 'book:json' 0 %}'.slice(0, -1) + id)
+                .then(res => res.json())
+                .then(res => {
+                    let name = document.querySelector('#saveForm [name=name]')
+                    let content = document.querySelector('#saveForm [name=content]')
+                    name.value = res.name
+                    content.value = res.content
+                })
+        }
+
+        function cleanForm() {
+            let name = document.querySelector('#saveForm [name=name]')
+            name.value = ''
+            let content = document.querySelector('#saveForm [name=content]')
+            content.value = ''
+        }
+    </script>
+
+{% endblock %}
