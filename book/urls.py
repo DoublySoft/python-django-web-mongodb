@@ -8,7 +8,7 @@ book_patterns = (
         path('create', views.add, name='create'),
         path('update/<str:pk>', views.update, name='update'),
         path('delete/<str:pk>', views.delete, name='delete'),
-        path('update/j-get-book-by-id/<str:pk>', views.json_get_book_by_id, name='json'),
+        path('update/json-get-book-by-id/<str:pk>', views.json_get_book_by_id, name='json'),
     ],
     'book'
 )

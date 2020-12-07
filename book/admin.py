@@ -1,4 +1,6 @@
 from django.contrib import admin
+
+from book.forms import BookForm
 from book.models import Book, Category
 
 
@@ -9,4 +11,4 @@ class AdminCategory(admin.ModelAdmin):
 
 @admin.register(Book)
 class AdminBook(admin.ModelAdmin):
-    pass
+    form = BookForm
