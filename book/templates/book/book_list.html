@@ -12,7 +12,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3>
-                            {{ book.name }}
+                            {{ book.name|truncatechars:"35" }}
                             <button class="btn btn-outline-danger float-right" data-id="{{ book.pk }}"
                                     data-toggle="modal" data-target="#deleteModal" data-name="{{ book.name }}">
                                 <i class="fa fa-trash-alt"></i>
@@ -24,7 +24,7 @@
                         </h3>
                     </div>
                     <div class="card-body">
-                        <p>{{ book.content }}</p>
+                        <p>{{ book.content|truncatechars:"350" }}</p>
                     </div>
                 </div>
             </div>
