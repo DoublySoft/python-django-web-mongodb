@@ -14,7 +14,7 @@
                 <div class="modal-body row">
                     {% for field in form.visible_fields %}
                         <div class="col-12 mb-2">
-                            <label for="id_name">{{ field.label_tag }}</label>
+                            {{ field.label_tag }}
                             {% if not field.errors %}
                                 {{ field }}
                                 {% if field.help_text %}

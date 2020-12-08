@@ -36,31 +36,43 @@ class BookForm(forms.ModelForm):
         self.data._mutable = True
         self.data["category"] = ObjectId(self.data["category"])
 
-        if 'dimension' in self.errors:
-            del self.errors['dimension']
+        # valid = super(BookForm, self).is_valid()
 
-        if len(self.errors) == 0:
-            self.data['dimension'] = {
-                "_id": ObjectId(),
-                "x": self.data['dimension-x'],
-                "y": self.data['dimension-y'],
-                "z": self.data['dimension-z'],
-            }
-
-            del self.data['dimension-x']
-            del self.data['dimension-y']
-            del self.data['dimension-z']
-
-            return True
-
-        # return super(BookForm, self).is_valid()
-        return False
+        return self.custom_valid_dimension()
 
     def save(self, commit=True):
         instance = super(BookForm, self).save(commit=False)
-        instance.dimension = self.data['dimension']
+        instance.dimension = self.data["dimension"]
+
+        if instance._id:
+            book = Book.objects.get(pk=ObjectId(instance._id))
+            self.data["dimension"]["_id"] = book.dimension["_id"]
 
         if commit:
             instance.save()
 
         return instance
+
+    def custom_valid_dimension(self):
+        if "dimension" in self.errors:
+            del self.errors["dimension"]
+
+            if len(self.errors) == 0:
+                try:
+                    self.data["dimension"] = {
+                        "_id": ObjectId(),
+                        "x": int(self.data["dimension-x"]),
+                        "y": int(self.data["dimension-y"]),
+                        "z": int(self.data["dimension-z"]),
+                    }
+                except ValueError:
+                    self.add_error("dimension", "Al menos una dimensiones es inválida")
+                    return False
+
+                del self.data["dimension-x"]
+                del self.data["dimension-y"]
+                del self.data["dimension-z"]
+
+                return True
+
+        return False

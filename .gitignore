@@ -106,5 +106,5 @@ ENV/
 # Fichero orden elementos carpeta MacOS
 *.DS_Store
 
-# SQLite
-# *.sqlite3
+# SQL
+#*.sql
