@@ -89,16 +89,30 @@
                 .then(res => {
                     let name = document.querySelector('#saveForm [name=name]')
                     let content = document.querySelector('#saveForm [name=content]')
+                    let dimensionX = document.querySelector('#saveForm [name=dimension-x]')
+                    let dimensionY = document.querySelector('#saveForm [name=dimension-y]')
+                    let dimensionZ = document.querySelector('#saveForm [name=dimension-z]')
                     name.value = res.name
                     content.value = res.content
+                    dimensionX.value = res.dimension.x
+                    dimensionY.value = res.dimension.y
+                    dimensionZ.value = res.dimension.z
+                    document.querySelector('#saveForm [name=category] option[value="' + res.category_id + '"]').selected = "selected"
                 })
         }
 
         function cleanForm() {
             let name = document.querySelector('#saveForm [name=name]')
             let content = document.querySelector('#saveForm [name=content]')
+            let dimensionX = document.querySelector('#saveForm [name=dimension-x]')
+            let dimensionY = document.querySelector('#saveForm [name=dimension-y]')
+            let dimensionZ = document.querySelector('#saveForm [name=dimension-z]')
             name.value = ''
             content.value = ''
+            dimensionX.value = ''
+            dimensionY.value = ''
+            dimensionZ.value = ''
+            document.querySelectorAll('#saveForm [name=category] option')[0].selected = "selected"
         }
     </script>
 

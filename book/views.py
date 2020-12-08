@@ -63,5 +63,10 @@ def json_get_book_by_id(request, pk):
     return JsonResponse({
         "name": book.name,
         "content": book.content,
-        # "category": str(book.category.pk),
+        "dimension": {
+            "x": book.dimension["x"],
+            "y": book.dimension["y"],
+            "z": book.dimension["z"],
+        },
+        "category_id": str(book.category.pk),
     })
